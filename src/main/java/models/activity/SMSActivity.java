@@ -1,17 +1,19 @@
 package models.activity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import models.Abonent;
+import lombok.RequiredArgsConstructor;
 
-@ToString
-@Getter
-@AllArgsConstructor
+@Embeddable
+
+@Data
+@RequiredArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class SMSActivity {
-    private long id;
+    @Column(name = "message_count")
     private int messageCount;
-    private Abonent abonent;
 }

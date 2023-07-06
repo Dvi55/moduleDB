@@ -1,17 +1,16 @@
 package models.activity;
 
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import models.Abonent;
+import lombok.RequiredArgsConstructor;
 
-@Getter
-@ToString
+@Embeddable
+@Data
+@RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
 public class CallActivity {
-    private long id;
     private int duration;
-    private Abonent abonent;
 }

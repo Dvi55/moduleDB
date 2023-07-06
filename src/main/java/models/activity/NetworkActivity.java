@@ -1,17 +1,14 @@
 package models.activity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import models.Abonent;
+import jakarta.persistence.Embeddable;
+import lombok.*;
 
-@Getter
-@ToString
-@AllArgsConstructor
+@Embeddable
+@Data
+@RequiredArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class NetworkActivity {
-    private long id;
-    private int gigabytes;
-    private Abonent abonent;
+    @NonNull
+    private Integer megabytes;
 }
