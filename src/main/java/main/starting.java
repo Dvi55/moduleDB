@@ -1,16 +1,21 @@
+package main;
+
 import dao.AbonentDAO;
+import org.apache.maven.cli.MavenCli;
 import org.flywaydb.core.Flyway;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import java.util.Scanner;
 
-public class Main {
+public class starting {
 
     public static void main(String[] args) {
+        MavenCli cli = new MavenCli();
+        cli.doMain(new String[]{"compile"}, System.getProperty("user.dir"), System.out, System.err);
         Flyway flyway = Flyway.configure()
-                .dataSource("jdbc:mysql://localhost:3306/operatoDB", "admin", "admin")
-                .locations("classpath:migration")
+                .dataSource("jdbc:mysql://localhost:3306/moduledb", "flyway", "111")
+                .locations("classpath:db/migrations")
                 .load();
         flyway.migrate();
         System.out.println("Welcome to DB console.");

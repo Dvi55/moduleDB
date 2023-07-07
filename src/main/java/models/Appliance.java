@@ -14,6 +14,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 
 public class Appliance {
-    @Column(name = "brand_name", nullable = false)
     private String brandName;
+    @Override
+    public String toString() {
+        return brandName;
+    }
 }

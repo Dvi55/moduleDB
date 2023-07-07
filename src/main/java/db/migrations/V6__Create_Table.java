@@ -10,18 +10,23 @@ import net.datafaker.Faker;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class V1_2__Create_Table extends BaseJavaMigration {
+public class V6__Create_Table extends BaseJavaMigration {
     @Override
     public void migrate(Context context) throws Exception {
         Connection connection = context.getConnection();
-        Faker faker = new Faker();
+        Faker faker = new Faker(new Locale("en"));
+        if (!tableExists(connection, "Abonent")) {
+            createAbonentTable(connection);
+        }
+        if (!tableExists(connection, "messages")) {
+            createMessagesTable(connection);
+        }
+
         try (PreparedStatement abonentStatement = connection.prepareStatement(
                 "INSERT INTO Abonent (phoneNumber, name, smsActivities, callActivities, networkActivity, devices, tariffs) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
@@ -30,11 +35,11 @@ public class V1_2__Create_Table extends BaseJavaMigration {
                 String phoneNumber = faker.phoneNumber().phoneNumber();
                 String name = faker.name().fullName();
 
-                SMSActivity smsActivities = generateRandomSMSActivity();
-                CallActivity callActivities = generateRandomCallActivity();
-                NetworkActivity networkActivity = generateRandomNetworkActivity();
-                Appliance appliance = generateRandomDevice();
-                Tariff tariff = generateRandomTariff();
+                Integer smsActivities = generateRandomSMSActivity();
+                Integer callActivities = generateRandomCallActivity();
+                Integer networkActivity = generateRandomNetworkActivity();
+                String appliance = generateRandomDevice();
+                String tariff = generateRandomTariff();
 
                 abonentStatement.setString(1, phoneNumber);
                 abonentStatement.setString(2, name);
@@ -56,41 +61,76 @@ public class V1_2__Create_Table extends BaseJavaMigration {
             }
         }
     }
+    private boolean tableExists(Connection connection, String tableName) throws SQLException {
+        try (ResultSet resultSet = connection.getMetaData().getTables(null, null, tableName, null)) {
+            return resultSet.next();
+        }
+    }
 
-    private SMSActivity generateRandomSMSActivity() {
+    private void createAbonentTable(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(
+                    "CREATE TABLE Abonent (" +
+                            "id INT AUTO_INCREMENT PRIMARY KEY," +
+                            "phoneNumber VARCHAR(255) NOT NULL," +
+                            "name VARCHAR(255) NOT NULL," +
+                            "smsActivities INTEGER(255) NOT NULL," +
+                            "callActivities INTEGER(255) NOT NULL," +
+                            "networkActivity INTEGER(255) NOT NULL," +
+                            "devices VARCHAR(255) NOT NULL," +
+                            "tariffs VARCHAR(255) NOT NULL" +
+                            ")"
+            );
+        }
+    }
+    private void createMessagesTable(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(
+                    "CREATE TABLE messages (" +
+                            "id INTEGER AUTO_INCREMENT PRIMARY KEY," +
+                            "text VARCHAR(255) NOT NULL," +
+                            "receiver_number VARCHAR(255) NOT NULL," +
+                            "abonent_id INT NOT NULL," +
+                            "FOREIGN KEY (abonent_id) REFERENCES Abonent(id)" +
+                            ")"
+            );
+        }
+    }
+
+    private Integer generateRandomSMSActivity() {
         Faker faker = new Faker();
         SMSActivity smsActivity = new SMSActivity();
         smsActivity.setMessageCount(faker.random().nextInt(1, 1000));
-        return smsActivity;
+        return smsActivity.getMessageCount();
     }
 
-    private CallActivity generateRandomCallActivity() {
+
+   private Integer generateRandomCallActivity() {
         Faker faker = new Faker();
         CallActivity callActivity = new CallActivity();
         callActivity.setDuration(faker.random().nextInt(1, 1000));
-        return callActivity;
+        return callActivity.getDuration();
     }
 
-    private NetworkActivity generateRandomNetworkActivity() {
+    private Integer generateRandomNetworkActivity() {
         Faker faker = new Faker();
         NetworkActivity networkActivity = new NetworkActivity();
         networkActivity.setMegabytes(faker.random().nextInt(1, 1000));
-        return networkActivity;
+        return networkActivity.getMegabytes();
     }
 
-    private Appliance generateRandomDevice() {
+    private String generateRandomDevice() {
         Faker faker = new Faker();
         Appliance appliance = new Appliance();
         appliance.setBrandName(faker.device().modelName());
-        return appliance;
+        return appliance.getBrandName();
     }
 
-    private Tariff generateRandomTariff() {
+    private String generateRandomTariff() {
         Faker faker = new Faker();
         Tariff tariff = new Tariff();
         tariff.setName(faker.lorem().word());
-        tariff.setPrice(faker.random().nextInt());
-        return tariff;
+        return tariff.getName();
     }
 
     private List<Message> generateRandomMessages(Faker faker) {

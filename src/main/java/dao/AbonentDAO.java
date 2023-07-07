@@ -45,27 +45,27 @@ public class AbonentDAO {
     public String getMostPopularActivity() {
         try (Session session = sessionFactory.openSession()) {
             String hql = "SELECT SUM(a.callActivities.duration) FROM Abonent a";
-            Query<Integer> query = session.createQuery(hql, Integer.class);
-            Integer callDuration = query.uniqueResult();
+            Query<Long> query = session.createQuery(hql, Long.class);
+            Long callDuration = query.uniqueResult();
             hql = "SELECT SUM(a.smsActivities.messageCount) FROM Abonent a";
-            query = session.createQuery(hql, Integer.class);
-            Integer smsCount = query.uniqueResult();
+            query = session.createQuery(hql, Long.class);
+            Long smsCount = query.uniqueResult();
             hql = "SELECT SUM(a.networkActivity.megabytes) FROM Abonent a";
-            query = session.createQuery(hql, Integer.class);
-            Integer networkMegabytes = query.uniqueResult();
+            query = session.createQuery(hql, Long.class);
+            Long networkMegabytes = query.uniqueResult();
             if (callDuration > smsCount && callDuration > networkMegabytes) {
-                return "Call service is the most popular";
+                return "Call service is the most popular. Count = " + callDuration;
             } else if (smsCount > callDuration && smsCount > networkMegabytes) {
-                return "SMS service is the most popular";
+                return "SMS service is the most popular. Count = " + smsCount;
             } else {
-                return "Network service is the most popular";
+                return "Network service is the most popular. Count = " + networkMegabytes;
             }
         }
     }
 
     public String getMostPopularDevice() {
         try (Session session = sessionFactory.openSession()) {
-            String hql = "SELECT a.device FROM Abonent a GROUP BY a.device ORDER BY COUNT(a) DESC";
+            String hql = "SELECT a.appliance FROM Abonent a GROUP BY a.appliance ORDER BY COUNT(a) DESC";
             Query<Appliance> query = session.createQuery(hql, Appliance.class);
             query.setMaxResults(1);
             Appliance mostPopularAppliance = query.uniqueResult();

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import models.Abonent;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
@@ -15,13 +14,10 @@ import java.util.Objects;
 @Getter
 @Setter
 @RequiredArgsConstructor
-
 public class Message {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @Column(name = "text", nullable = false)
     private String text;
     @Column(name = "receiver_number", nullable = false)

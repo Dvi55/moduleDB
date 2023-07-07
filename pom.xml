@@ -30,6 +30,11 @@
             <version>9.16.0</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-embedder</artifactId>
+            <version>3.8.4</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
@@ -46,43 +51,40 @@
             <artifactId>datafaker</artifactId>
             <version>2.0.1</version>
         </dependency>
-    </dependencies>
-<build>
-    <plugins>
-        <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.7.0</version>
-            <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-            </configuration>
-        </plugin>
-        <plugin>
+        <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-maven-plugin</artifactId>
-            <version>9.8.1</version>
-            <configuration>
-                <url>jdbc:mariadb://localhost:3306/moduledb</url>
-                <schemas>moduledb</schemas>
-                <user>flyway</user>
-                <password>111</password>
-                <locations>
-                    <location>classpath:db/migrations</location>
-                </locations>
-                <baselineOnMigrate>true</baselineOnMigrate>
-                <sqlMigrationPrefix>V</sqlMigrationPrefix>
-                <createSchemas>true</createSchemas>
-                <sqlMigrationSeparator>__</sqlMigrationSeparator>
-                <validateOnMigrate>false</validateOnMigrate>
-            </configuration>
-            <dependencies>
-                <dependency>
-                    <groupId>org.mariadb.jdbc</groupId>
-                    <artifactId>mariadb-java-client</artifactId>
-                    <version>2.7.2</version>
-                </dependency>
-            </dependencies>
-        </plugin>
-    </plugins>
-</build>
+            <artifactId>flyway-mysql</artifactId>
+            <version>9.16.0</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>9.8.1</version>
+                <configuration>
+                    <url>jdbc:mariadb://localhost:3306/moduledb</url>
+                    <user>flyway</user>
+                    <password>111</password>
+                    <locations>
+                        <location>classpath:db/migrations</location>
+                    </locations>
+                    <baselineOnMigrate>true</baselineOnMigrate>
+                    <sqlMigrationPrefix>V</sqlMigrationPrefix>
+                    <sqlMigrationSeparator>__</sqlMigrationSeparator>
+                    <validateOnMigrate>false</validateOnMigrate>
+                    <cleanDisabled>false</cleanDisabled>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.mariadb.jdbc</groupId>
+                        <artifactId>mariadb-java-client</artifactId>
+                        <version>2.7.2</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>

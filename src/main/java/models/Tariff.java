@@ -14,8 +14,5 @@ import lombok.ToString;
 @EqualsAndHashCode
 
 public class Tariff {
-    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "price", nullable = false)
-    private int price;
 }
