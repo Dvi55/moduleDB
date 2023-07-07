@@ -1,6 +1,7 @@
 package dao;
 
 import models.Abonent;
+import models.Appliance;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -61,14 +62,17 @@ public class AbonentDAO {
             }
         }
     }
+
     public String getMostPopularDevice() {
         try (Session session = sessionFactory.openSession()) {
-            String hql = "SELECT d.brandName FROM Abonent a JOIN a.devices d GROUP BY d.brandName ORDER BY COUNT(d) DESC";
-            Query<String> query = session.createQuery(hql, String.class);
+            String hql = "SELECT a.device FROM Abonent a GROUP BY a.device ORDER BY COUNT(a) DESC";
+            Query<Appliance> query = session.createQuery(hql, Appliance.class);
             query.setMaxResults(1);
-            return query.uniqueResult();
+            Appliance mostPopularAppliance = query.uniqueResult();
+            return mostPopularAppliance != null ? mostPopularAppliance.getBrandName() : "No devices found";
         }
     }
+
     public boolean containsSMSWithKeyword(String keyword) {
         try (Session session = sessionFactory.openSession()) {
             String hql = "SELECT COUNT(m) FROM Abonent a JOIN a.messages m WHERE m.text LIKE :keyword";
@@ -78,6 +82,7 @@ public class AbonentDAO {
             return count > 0;
         }
     }
+
     public String searchSMSByKeyword(String keyword) {
         try (Session session = sessionFactory.openSession()) {
             String hql = "FROM Abonent a JOIN a.messages m WHERE m.text LIKE :keyword";

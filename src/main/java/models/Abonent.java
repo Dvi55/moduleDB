@@ -1,7 +1,9 @@
 package models;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import models.activity.CallActivity;
 import models.activity.Message;
 import models.activity.NetworkActivity;
@@ -17,14 +19,15 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Abonent {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
     private Long id;
+    @Column(name = "phoneNumber", unique = true)
+    private String phoneNumber;
 
     @Column(name = "name")
     private String name;
@@ -33,7 +36,6 @@ public class Abonent {
     @OneToMany(mappedBy = "abonent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Message> messages;
 
-    @Column(name = "smsActivities")
     @Embedded
     private SMSActivity smsActivities;
 
@@ -41,17 +43,14 @@ public class Abonent {
     @Embedded
     private CallActivity callActivities;
 
-    @Column(name = "networkActivity")
     @Embedded
     private NetworkActivity networkActivity;
 
-    @Column(name = "devices")
-    @OneToMany(mappedBy = "abonent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Device> devices;
+    @Embedded
+    private Appliance appliance;
 
-    @Column(name = "tariffs")
-    @OneToMany(mappedBy = "abonent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Tariff> tariffs;
+    @Embedded
+    private Tariff tariffs;
 
     @Override
     public String toString() {
@@ -59,4 +58,3 @@ public class Abonent {
                 "id = " + id + ")";
     }
 }
-

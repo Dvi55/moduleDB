@@ -1,4 +1,5 @@
 import dao.AbonentDAO;
+import org.flywaydb.core.Flyway;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -7,6 +8,11 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+        Flyway flyway = Flyway.configure()
+                .dataSource("jdbc:mysql://localhost:3306/operatoDB", "admin", "admin")
+                .locations("classpath:migration")
+                .load();
+        flyway.migrate();
         System.out.println("Welcome to DB console.");
         Scanner scanner = new Scanner(System.in);
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();

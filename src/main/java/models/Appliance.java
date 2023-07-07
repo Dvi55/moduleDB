@@ -1,4 +1,4 @@
-package models.activity;
+package models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 
-public class SMSActivity {
-    @Column(name = "message_count")
-    private int messageCount;
+public class Appliance {
+    @Column(name = "brand_name", nullable = false)
+    private String brandName;
 }

@@ -1,14 +1,12 @@
 package models.activity;
 
 import jakarta.persistence.Embeddable;
-import lombok.*;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Embeddable
 @Data
 @RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
 public class NetworkActivity {
-    @NonNull
     private Integer megabytes;
 }

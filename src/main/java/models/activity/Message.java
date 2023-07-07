@@ -1,32 +1,27 @@
 package models.activity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import models.Abonent;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "messages")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
+
 public class Message {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
     private Long id;
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "send_time", nullable = false)
-    private LocalDateTime sendTime;
     @Column(name = "text", nullable = false)
     private String text;
     @Column(name = "receiver_number", nullable = false)
